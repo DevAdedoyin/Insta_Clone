@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Insta Clone</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">kgf53KLsHFOo7F1EWIGtIGnDfqwcOM63Y8MmkHiP</string>
+    <string name="back4app_client_key">bkDgH24SEzvu8IqZmmlk4G88NprdVqRGyA8tag0K</string>
+</resources>
