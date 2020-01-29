@@ -114,4 +114,31 @@
         android:textSize="20sp"
         android:id="@+id/saveBtn"/>
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:text="GET FOOTBALLER DETAIL"
+        android:textSize="25sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveBtn"
+        android:id="@+id/getDetailText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#990000"
+        android:text="Get All Footballers"
+        android:textColor="#fff"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/getDetailText"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:id="@+id/getAll"
+        android:padding="10dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
