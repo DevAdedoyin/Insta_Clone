@@ -110,7 +110,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fClubEdt"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:id="@+id/saveBtn"/>
 
@@ -136,9 +136,23 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/getDetailText"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:textSize="20sp"
         android:id="@+id/getAll"
+        android:padding="10dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#990000"
+        android:text="User Signup And Login Page"
+        android:textColor="#fff"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/getAll"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:id="@+id/switch_to_register"
         android:padding="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

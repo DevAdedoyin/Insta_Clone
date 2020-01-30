@@ -2,6 +2,7 @@ package com.example.instaclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -28,6 +30,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
     private TextView getFootballerDetail;
     private Button getAll;
     private String getAllFootballers;
+    private Button switch_to_registeration_page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Footballer");
+
+                parseQuery.whereGreaterThanOrEqualTo("Age", 30);
+                parseQuery.setLimit(1);
+
                 parseQuery.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
@@ -78,6 +85,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
+        switch_to_registeration_page = findViewById(R.id.switch_to_register);
+        switch_to_registeration_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUp.this, RegisterUser.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
