@@ -2,119 +2,110 @@ package com.example.instaclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.EditText;
 
-import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
-import java.util.PriorityQueue;
 
-public class SignUp extends AppCompatActivity implements View.OnClickListener{
+public class SignUp extends AppCompatActivity{
 
-    private Button btnSave;
-    private TextView nameEdtTxt;
-    private TextView ageEdtTxt;
-    private TextView clubEdtTxt;
-    private TextView getFootballerDetail;
-    private Button getAll;
-    private String getAllFootballers;
-    private Button switch_to_registeration_page;
+    private Button btnSignupUser;
+    private Button switch_to_Login_page;
+    private EditText userEmail;
+    private  EditText userName;
+    private EditText userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.signup_activity);
 
-        btnSave = findViewById(R.id.saveBtn);
-        nameEdtTxt = findViewById(R.id.fNameEdt);
-        ageEdtTxt = findViewById(R.id.fAgeEdt);
-        clubEdtTxt = findViewById(R.id.fClubEdt);
-        getFootballerDetail = findViewById(R.id.getDetailText);
-        getAll = findViewById(R.id.getAll);
+        setTitle("Signup");
 
-        btnSave.setOnClickListener(SignUp.this);
+        btnSignupUser = findViewById(R.id.btnSignup);
+        switch_to_Login_page = findViewById(R.id.btnToLoginPage);
+        userEmail = findViewById(R.id.edtEmail);
+        userName = findViewById(R.id.edtUsernameSignup);
+        userPassword = findViewById(R.id.edtPasswordSignup);
 
-        getFootballerDetail.setOnClickListener(new View.OnClickListener() {
+        userPassword.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View v) {
-
-                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Footballer");
-                parseQuery.getInBackground("X7hvXoLFZm", new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject object, ParseException e) {
-                        getFootballerDetail.setText("Name: " + object.get("Name") + " \n" + "Club: " + object.get("Club") + " \n" + "Age: " + object.get("Age"));
-                    }
-                });
-
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                    btnSignupUser.callOnClick();
+                }
+                return false;
             }
         });
 
-        getAll.setOnClickListener(new View.OnClickListener() {
+        if (ParseUser.getCurrentUser() != null){
+            //ParseUser.getCurrentUser().logOut();
+            switch_to_index();
+        }
+
+        btnSignupUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Footballer");
-
-                parseQuery.whereGreaterThanOrEqualTo("Age", 30);
-                parseQuery.setLimit(1);
-
-                parseQuery.findInBackground(new FindCallback<ParseObject>() {
+                if (userEmail.getText().toString().equals("") || userName.getText().toString().equals("") || userPassword.getText().toString().equals("")){
+                    FancyToast.makeText(SignUp.this, "Email, Username and Password Required", FancyToast.LENGTH_SHORT, FancyToast.INFO, true);
+                } else {
+                final ParseUser signupParse = new ParseUser();
+                signupParse.setEmail(userEmail.getText().toString());
+                signupParse.setUsername(userName.getText().toString());
+                signupParse.setPassword(userPassword.getText().toString());
+                ProgressDialog progressDialog = new ProgressDialog(SignUp.this);
+                progressDialog.setMessage("Registering " + userName.getText().toString());
+                progressDialog.show();
+                signupParse.signUpInBackground(new SignUpCallback() {
                     @Override
-                    public void done(List<ParseObject> objects, ParseException e) {
+                    public void done(ParseException e) {
                         if (e == null){
-                            for (ParseObject footBaller : objects){
-                                getAllFootballers = getAllFootballers + footBaller.get("Name") + " \n";
-                            }
-                            FancyToast.makeText(SignUp.this, getAllFootballers,  FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
-                        } else {
-                            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_SHORT).show();
+                            FancyToast.makeText(SignUp.this, signupParse.getUsername() + " Registered Successfully", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+                            switch_to_index();
+                        }else {
+                            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
                         }
+                        ProgressDialog progressDialog = new ProgressDialog(SignUp.this);
+                        progressDialog.dismiss();
                     }
                 });
+                }
             }
         });
 
-        switch_to_registeration_page = findViewById(R.id.switch_to_register);
-        switch_to_registeration_page.setOnClickListener(new View.OnClickListener() {
+        switch_to_Login_page.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignUp.this, RegisterUser.class);
-                startActivity(intent);
+                Intent switchToLogin = new Intent(SignUp.this, Login.class);
+                startActivity(switchToLogin);
+
             }
         });
     }
 
-    @Override
-    public void onClick(View v) {
+    public void hideKeyboard(View view){
         try {
-            final ParseObject parseObject = new ParseObject("Footballer");
-            parseObject.put("Name", nameEdtTxt.getText().toString());
-            parseObject.put("Age", Integer.parseInt(ageEdtTxt.getText().toString()));
-            parseObject.put("Club", clubEdtTxt.getText().toString());
-
-            parseObject.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        FancyToast.makeText(SignUp.this, parseObject.get("Name") + " profile is saved", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
-                    } else {
-                        FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
-                    }
-                }
-            });
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         } catch (Exception e){
-            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+            e.printStackTrace();
         }
     }
+    public void switch_to_index(){
+        Intent intent = new Intent(SignUp.this, Index.class);
+        startActivity(intent);
+
+    }
+
 }
