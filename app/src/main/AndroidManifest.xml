@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUp"/>
-        <activity android:name=".Index"/>
+        <activity android:name=".Index" android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.parse.SERVER_URL"
