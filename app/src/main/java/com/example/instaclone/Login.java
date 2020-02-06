@@ -3,7 +3,6 @@ package com.example.instaclone;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -100,5 +99,6 @@ public class Login extends AppCompatActivity {
     public void switch_to_index(){
         Intent intent = new Intent(Login.this, Index.class);
         startActivity(intent);
+        finish();
     }
 }
